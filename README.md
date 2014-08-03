@@ -15,4 +15,4 @@ vidéos
 
 ####Multi-Crop 
 
-######/!\ autoriser l'accès au dossier img-crop et au fichier coord.json
+#####/!\ autoriser l'accès au dossier img-crop et au fichier coord.json
