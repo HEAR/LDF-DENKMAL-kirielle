@@ -13,3 +13,6 @@ crédits photographiques
 bande son : ambiance ? son continu et évolutif ? quid lors des vidéos
 vidéos
 
+####Multi-Crop 
+
+/!\ autoriser l'accès au dossier img-crop et au fichier coord.json
