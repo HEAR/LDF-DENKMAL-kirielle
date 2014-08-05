@@ -49,32 +49,7 @@
   </head>
   <body>
 
-    <?php
-      if ($_SERVER['REQUEST_METHOD'] == 'POST')
-      {
-          //calculer le nombre d'images dans le dossier
-          $nbImg = count(glob('img_crop/*.jpg'));
-          $n = $nbImg + 1;
-        
-          //recuperer les coord et générer la vignette
-          $targ_w = $_POST['w'] ;
-          $targ_h = $_POST['h'] ;
-          $jpeg_quality = 90;
-          $src = 'img/coolCar.jpg';  
-          $img_r = imagecreatefromjpeg($src);
-          $dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
-          imagecopyresampled($dst_r,$img_r,0,0,$_POST['x1'],$_POST['y1'],$targ_w,$targ_h,$_POST['w'],$_POST['h']);
-         
-          //enregistrer la vignette
-          imagejpeg($dst_r,'img_crop/image'.$n.'.jpg',$jpeg_quality);
-          imagedestroy($dst_r);
 
-          //afficher toute les images
-          for ($x = 1; $x < $n+1; $x ++){
-            echo "<img src='img_crop/image".$x.".jpg'/>";
-          }
-       }  
-      ?>
     <!-- Img a croper -->
     <img src="img/coolCar.jpg" id="target" alt="" />
 
@@ -107,6 +82,26 @@
       $json_coord = json_encode($coord);
       fwrite($json_file, $json_coord."\n" );
       fclose($json_file);
+
+      $nbImg = count(glob('img_crop/*.jpg'));
+        
+      //recuperer les coord et générer la vignette
+      $targ_w = $_POST['w'] ;
+      $targ_h = $_POST['h'] ;
+      $jpeg_quality = 90;
+      $src = 'img/coolCar.jpg';  
+      $img_r = imagecreatefromjpeg($src);
+      $dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
+      imagecopyresampled($dst_r,$img_r,0,0,$_POST['x1'],$_POST['y1'],$targ_w,$targ_h,$_POST['w'],$_POST['h']);
+         
+      //enregistrer la  avec le tag
+      imagejpeg($dst_r,'img_crop/'.$_POST['tag'].'.jpg',$jpeg_quality);
+      imagedestroy($dst_r);
+
+      //afficher toute les images (utiliser le json)
+      // for ($x = 1; $x < $n+1; $x ++){
+      //    echo "<img src='img_crop/image".$x.".jpg'/>";
+      //  }
     ?>
 
   </body>
