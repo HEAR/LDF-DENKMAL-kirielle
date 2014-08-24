@@ -7,6 +7,7 @@
     <script src="js/jquery.min.js"></script>
     <script src="js/jquery.Jcrop.js"></script>
     <script type="text/javascript">
+
     //Jcrop
       jQuery(function($){
 
@@ -29,61 +30,77 @@
         });
 
       });
-      function showCoords(c)
-      {
+
+      function showCoords(c){
         $('#x1').val(c.x);
         $('#y1').val(c.y);
         $('#x2').val(c.x2);
         $('#y2').val(c.y2);
         $('#w').val(c.w);
         $('#h').val(c.h);
+
+        //input tag position
+        var posX = c.x + 5;
+        var posY = c.y2 + 10;
+        var div = document.getElementById("tagPos");
+        div.style.position="absolute";
+        div.style.left= posX+'px' ;
+        div.style.top= posY +'px';
+        div.style.zIndex="900";
       };
 
-      function clearCoords()
-      {
+      function clearCoords(){
         $('#coords input').val('');
       };
     //fin Jcrop
     </script>
-  <link rel="stylesheet" href="css/jquery.Jcrop.css" type="text/css" />
+
+    <style type="text/css">
+      #tagImg{
+        position:absolute;
+        background-color: pink;
+        opacity: 0.4;
+      }
+    </style>
+
+    <link rel="stylesheet" href="css/jquery.Jcrop.css" type="text/css" />
   </head>
   <body>
-
-
     <!-- Img a croper -->
     <img src="img/coolCar.jpg" id="target" alt="" />
 
     <!-- Formulaire pour recuperer les coord et le tag -->
     <form id="coords" class="coords" method="post" action="">
-
       <label>X1 <input type="number" size="4" id="x1" name="x1" /></label>
       <label>Y1 <input type="number" size="4" id="y1" name="y1" /></label>
       <label>X2 <input type="number" size="4" id="x2" name="x2" /></label>
       <label>Y2 <input type="number" size="4" id="y2" name="y2" /></label>
       <label>W <input type="number" size="4" id="w" name="w" /></label>
       <label>H <input type="number" size="4" id="h" name="h" /></label>
-      <label>tag <input type="text" id="tag" name="tag" /></label>
-      <input type= "submit" value="envoyer"/>
+      <div id="tagPos">
+        <input type="text" id="tag" name="tag" value="ici le tag"/> 
+        <input type= "submit" value="envoyer"/>
+      </div>
     </form>
-
+    
     <?php
+    // créer un evenement on submit ??//
+
       //genere le fichier json avec coord et tag
-      $json_file = fopen('coord.json', 'a');
-      $coord = array(
-        'tag' => $_POST['tag'],
-        'x1' => $_POST['x1'], 
-        'y1' => $_POST['y1'],
-        'x2' => $_POST['x2'],
-        'y2' => $_POST['y2'],
-        'w' => $_POST['w'],
-        'h' => $_POST['h']
-      );
-
-      $json_coord = json_encode($coord);
-      fwrite($json_file, $json_coord."\n" );
-      fclose($json_file);
-
-      $nbImg = count(glob('img_crop/*.jpg'));
+       $data = array (
+          'tag' => $_POST['tag'],
+          'x1' => $_POST['x1'], 
+          'y1' => $_POST['y1'],
+          'x2' => $_POST['x2'],
+          'y2' => $_POST['y2'],
+          'w' => $_POST['w'],
+          'h' => $_POST['h']
+        );
+      $jsonString = file_get_contents('coord.json');
+      $dataCoord = json_decode($jsonString);
+      array_push($dataCoord, $data);
+      $newJsonString = json_encode($dataCoord);
+      file_put_contents('coord.json', $newJsonString);
         
       //recuperer les coord et générer la vignette
       $targ_w = $_POST['w'] ;
@@ -94,16 +111,29 @@
       $dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
       imagecopyresampled($dst_r,$img_r,0,0,$_POST['x1'],$_POST['y1'],$targ_w,$targ_h,$_POST['w'],$_POST['h']);
          
-      //enregistrer la  avec le tag
+      //enregistrer la vignette avec le tag
       imagejpeg($dst_r,'img_crop/'.$_POST['tag'].'.jpg',$jpeg_quality);
       imagedestroy($dst_r);
 
-      //afficher toute les images (utiliser le json)
-      // for ($x = 1; $x < $n+1; $x ++){
-      //    echo "<img src='img_crop/image".$x.".jpg'/>";
-      //  }
-    ?>
+      //placement des vignettes
+       $jsonF = file_get_contents('coord.json');
+       $coord = json_decode($jsonF,true);
+       $compteur = count($coord);
+       for($i; $i<$compteur; $i ++){
+         if($coord[$i]['tag'] != null){
+          $posX=$coord[$i]['x1'];
+          $posY=$coord[$i]['y1'];
+          $h=$coord[$i]['h'];
+          $w=$coord[$i]['w'];
+          $tag=$coord[$i]['tag'];
+          ?>
 
+          <div id="tagImg" style="top:<?php echo $posY ?>px; left:<?php echo $posX ?>px; width:<?php echo $w?>px; height:<?php echo $h?>px;"><?php echo $tag?></div>
+          
+          <?php
+         }
+        }
+     ?>
   </body>
 </html>
 
