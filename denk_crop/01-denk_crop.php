@@ -84,7 +84,7 @@
     </form>
     
     <?php
-    // créer un evenement on submit ??//
+    if ( isset( $_POST['submit'] ) ) {
 
       //genere le fichier json avec coord et tag
        $data = array (
@@ -114,12 +114,12 @@
       //enregistrer la vignette avec le tag
       imagejpeg($dst_r,'img_crop/'.$_POST['tag'].'.jpg',$jpeg_quality);
       imagedestroy($dst_r);
-
+    }
       //placement des vignettes
        $jsonF = file_get_contents('coord.json');
        $coord = json_decode($jsonF,true);
        $compteur = count($coord);
-       for($i; $i<$compteur; $i ++){
+       for($i =0; $i<$compteur; $i ++){
          if($coord[$i]['tag'] != null){
           $posX=$coord[$i]['x1'];
           $posY=$coord[$i]['y1'];
@@ -133,6 +133,7 @@
           <?php
          }
         }
+
      ?>
   </body>
 </html>
