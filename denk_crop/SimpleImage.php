@@ -109,4 +109,5 @@ class SimpleImage {
 		return $rgb;
 	}
 }
+
 ?>
