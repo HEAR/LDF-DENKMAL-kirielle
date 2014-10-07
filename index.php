@@ -8,5 +8,29 @@
 </head>
 <body>
 	kyrielle
+
+	<?php
+
+		/*
+		
+		$templateListe = array();
+		foreach(glob("{".LOCAL_PATH.SLIDE_TEMPLATE_FOLDER."*}",GLOB_BRACE) as $folder){
+		    
+		        if(is_dir($folder)){
+		        	$dossier = str_replace(LOCAL_PATH.SLIDE_TEMPLATE_FOLDER,'',$folder);
+		        	if($dossier != 'default' && $dossier != 'meteo'){
+		      			$templateListe[$dossier] = $dossier ;
+		      		}
+				}
+		}
+
+		 */
+
+		foreach(glob("{".LOCAL_PATH.SLIDE_TEMPLATE_FOLDER."*}",GLOB_BRACE) as $folder){
+
+		}
+
+	?>
+
 </body>
 </html>

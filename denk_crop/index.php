@@ -1,158 +1,189 @@
 <?php
 
-include_once('../config.php'); 
+include_once('../config.php');
+include_once('image.class.php'); 
 
-if(isset($_POST['update'])){
 
-  // créer un evenement on submit ??//
+/**
+ * Fonction qui sert à nettoyer le nom des fichiers
+ * @param  [type] $valeur [description]
+ * @return [type]         [description]
+ */
+function makeFileName($valeur)
+{
+	$valeur = strtr($valeur,'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ',				'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
 
-  //genere le fichier json avec coord et tag
-  $data = array (
-    'tag' => $_POST['tag'],
-    'x1' => $_POST['x1'], 
-    'y1' => $_POST['y1'],
-    'x2' => $_POST['x2'],
-    'y2' => $_POST['y2'],
-    'w' => $_POST['w'],
-    'h' => $_POST['h']
-  );
-  $jsonString = file_get_contents('coord.json');
-  $dataCoord = json_decode($jsonString);
-  array_push($dataCoord, $data);
-  $newJsonString = json_encode($dataCoord);
-  file_put_contents('coord.json', $newJsonString);
+	$valeur = preg_replace('/([^.a-z0-9]+)/i', '_', $valeur);
 
-  //recuperer les coord et générer la vignette
-  $targ_w = $_POST['w'] ;
-  $targ_h = $_POST['h'] ;
-  $jpeg_quality = 90;
-  $src = 'img/coolCar.jpg';  
-  $img_r = imagecreatefromjpeg($src);
-  $dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
-  imagecopyresampled($dst_r,$img_r,0,0,$_POST['x1'],$_POST['y1'],$targ_w,$targ_h,$_POST['w'],$_POST['h']);
+	return $valeur;
+}
 
-  //enregistrer la vignette avec le tag
-  imagejpeg($dst_r,'img_crop/'.$_POST['tag'].'.jpg',$jpeg_quality);
-  imagedestroy($dst_r);
+/**
+ * Sert à uploader une image dans un dossier à son nom
+ * @param  [type] $file       [description]
+ * @param  [type] $repository [description]
+ * @return [type]             [description]
+ */
+function upload($file, $repository)
+{	
+	$name = $file["name"];
+	$name = makeFileName($name);
+
+	$pos 	   = strrpos($name, '.');
+	$extension = substr($name, $pos, strlen($name) );
+	$nom 	   = substr($name, 0, $pos);
+	$cpt	   = 0;
+
+	$repository = $repository.$nom.'/';
+	mkdir($repository);
+
+	while(file_exists($repository.$name))
+	{
+		$cpt++;
+		$name = $nom.'('.$cpt.')'.$extension;
+	}
+	
+	copy($file['tmp_name'], $repository.$name);
+
+
+	$json 		  = new stdClass();
+	$json->file   = $name;
+	$json->thumbs = array();
+
+	file_put_contents($repository.'data.json', json_encode($json));
+
+
+	return $name;
+}
+
+
+/**
+ * POUR SUPPRIMER UN MOT CLEF
+ */
+if( isset($_GET['suppr']) && !empty($_GET['suppr']) )
+{
+
+	if(is_file(LOCAL_PATH.'/keywords/'.$_GET['suppr'].'.json'))
+	{
+		unlink(LOCAL_PATH.'/keywords/'.$_GET['suppr'].'.json');
+	}
+
+	header('Location:./');
+}
+
+/**
+ * POUR AJOUTER UN MOT CLEF
+ */
+if( isset( $_POST['add_keyword']) && !empty($_POST['keyword'] ) )
+{
+
+	$json              = new stdClass();
+	$json->mot         = $_POST['keyword'];
+	$json->identifiant = makeFileName($_POST['keyword']);
+	$json->images      = array();
+
+	$json              = json_encode($json);
+
+	file_put_contents(LOCAL_PATH.'/keywords/'.makeFileName($_POST['keyword']).'.json', $json);
+
+}
+
+/**
+ * POUR AJOUTER UNE IMAGE
+ */
+if( !empty( $_FILES['image_file']['name'] ) )
+{
+	echo $filepath = upload($_FILES['image_file'], LOCAL_PATH.'/data/');
 }
 
 ?>
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Kyrielle Tag Image</title>
-    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<head>
+	<title>Kyrielle Tag Image</title>
+	<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/jquery.Jcrop.js"></script>
-    <script type="text/javascript">
+	<script src="js/jquery-1.11.1.min.js"></script>
 
-    //Jcrop
-      jQuery(function($){
+</head>
+<body>
 
-        var jcrop_api;
+	<h1>Kirielle — administration</h1>
+	<!--<p><?php echo LOCAL_PATH; ?></p>
+	<p><?php echo URL; ?></p>-->
 
-        $('#target').Jcrop({
-          onChange:   showCoords,
-          onSelect:   showCoords,
-          onRelease:  clearCoords
-        },function(){
-          jcrop_api = this;
-        });
+	
 
-        $('#coords').on('change','input',function(e){
-          var x1 = $('#x1').val(),
-              x2 = $('#x2').val(),
-              y1 = $('#y1').val(),
-              y2 = $('#y2').val();
-          jcrop_api.setSelect([x1,y1,x2,y2]);
-        });
+	<h2>Mots clefs :</h2>
+	<form action="" method="post">
 
-      });
+		<input type="text"    name="keyword" placeholder="Mot clef"/>
+		<input type="hidden"  name="add_keyword" value="1"/>
+		<input type="submit"  value="Ajouter"/>
 
-      function showCoords(c){
-        $('#x1').val(c.x);
-        $('#y1').val(c.y);
-        $('#x2').val(c.x2);
-        $('#y2').val(c.y2);
-        $('#w').val(c.w);
-        $('#h').val(c.h);
+	</form>
+	<ul>
+		<?php
 
-        //input tag position
-        var posX = c.x + 5;
-        var posY = c.y2 + 10;
-        var div = document.getElementById("tagPos");
-        div.style.position="absolute";
-        div.style.left= posX+'px' ;
-        div.style.top= posY +'px';
-        div.style.zIndex="900";
-      };
+		// on fait la liste des mots clefs
+		foreach( glob( "{" . LOCAL_PATH . '/keywords/*.json}', GLOB_BRACE ) as $file )
+		{
 
-      function clearCoords(){
-        $('#coords input').val('');
-      };
-    //fin Jcrop
-    </script>
+			$info = json_decode(file_get_contents($file));
 
-    <style type="text/css">
-      #tagImg{
-        position:absolute;
-        background-color: pink;
-        opacity: 0.4;
-      }
-      .wrapper{
-        position: relative;
-      }
-    </style>
+			$keyword      = $info->mot;
+			$identifiant  = $info->identifiant;
 
-    <link rel="stylesheet" href="css/jquery.Jcrop.css" type="text/css" />
-  </head>
-  <body>
+			echo "<li>$keyword / $identifiant / (<a href='?suppr=$identifiant' data-word='$keyword' class='suppr'>supprimer</a>)</li>";
 
-    <p><?php echo LOCAL_PATH; ?></p>
-    <p><?php echo URL; ?></p>
+		}
 
-    <!-- Img a croper -->
-    <div class="wrapper">
-      <img src="img/coolCar.jpg" id="target" alt="" />
-      <?php //placement des vignettes
-      $jsonF = file_get_contents('coord.json');
-      $coord = json_decode($jsonF,true);
-      $compteur = count($coord);
+		?>
+	</ul>
 
-      for($i=0; $i<$compteur; $i ++){
-        if($coord[$i]['tag'] != null){
-          $posX=$coord[$i]['x1'];
-          $posY=$coord[$i]['y1'];
-          $h=$coord[$i]['h'];
-          $w=$coord[$i]['w'];
-          $tag=$coord[$i]['tag'];
-        ?>
 
-      <div id="tagImg" style="top:<?php echo $posY ?>px; left:<?php echo $posX ?>px; width:<?php echo $w?>px; height:<?php echo $h?>px;"><?php echo $tag?></div>
+	<h2>Images :</h2>
+	<form action="" enctype="multipart/form-data" method="post">
+		<input type="file" value="" name="image_file" />
+		<input type="submit" value="Ajouter l'image"/>
+	</form>
+	<ul>
+		<?php
 
-      <?php
-        }
-      }
-      ?>
-    </div>
+	  	// on fait la liste des images
+		foreach( glob( "{" . LOCAL_PATH . '/data/*}', GLOB_BRACE ) as $folder )
+		{
 
-    <!-- Formulaire pour recuperer les coord et le tag -->
-    <form id="coords" class="coords" method="post" action="">
-      <input type="hidden" name="update">
-      <label>X1 <input type="number" size="4" id="x1" name="x1" /></label>
-      <label>Y1 <input type="number" size="4" id="y1" name="y1" /></label>
-      <label>X2 <input type="number" size="4" id="x2" name="x2" /></label>
-      <label>Y2 <input type="number" size="4" id="y2" name="y2" /></label>
-      <label>W <input type="number" size="4" id="w" name="w" /></label>
-      <label>H <input type="number" size="4" id="h" name="h" /></label>
-      <div id="tagPos">
-        <input type="text" id="tag" name="tag" value="ici le tag"/> 
-        <input type= "submit" value="envoyer"/>
-      </div>
-    </form>
-    
-   
-  </body>
+			$vignette = $folder.'/vignette.jpg';
+
+			if(is_file($vignette))
+			{
+
+				$url     = str_replace(LOCAL_PATH, URL, $vignette);
+				$folder  = explode('/', $folder);
+				$editurl = URL.'/denk_crop/edit.php?image='.$folder[count($folder)-1];
+
+				echo "<li class='vignette'><a href='$editurl'><img src='$url'/></a></li>";
+			}
+		}
+
+		?>
+	</ul>
+
+
+
+	<script>
+		$(document).ready(function(){
+			$('.suppr').click(function(event){
+
+				if(!confirm("Attention vous allez supprimer le mot clef « "+ $(this).data('word') +" » et toutes les vignettes associées, souhaitez vous continuer ?")){
+					event.preventDefault();
+					return false;
+				}
+
+			});
+		});
+	</script>
+</body>
 </html>
 

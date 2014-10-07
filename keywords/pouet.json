@@ -1,0 +1,23 @@
+{
+	"mot":"Pouêt",
+	"identifiant":"pouet",
+	"images":
+	[
+		{
+			"path":"coolCar",
+			"tags":[
+				{
+					"tag":"test",
+					"thumb":"test.jpg",
+					"x1":"69",
+					"y1":"172",
+					"x2":"323",
+					"y2":"333",
+					"w":"254",
+					"h":"161"
+				}
+			]
+		}
+		
+	]
+}
