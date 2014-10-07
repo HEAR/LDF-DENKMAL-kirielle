@@ -38,11 +38,11 @@ if($isImage)
 	        'h'   => $_POST['h']
 	    );
 
-	    $jsonString = file_get_contents('data.json');
+	    $jsonString = file_get_contents($folderPATH.'/data.json');
 	    $dataCoord  = json_decode($jsonString);
-	    array_push($dataCoord, $data);
+	    array_push($dataCoord->thumbs, $data);
 	    $newJsonString = json_encode($dataCoord);
-	    file_put_contents('data.json', $newJsonString);
+	    file_put_contents($folderPATH.'/data.json', $newJsonString);
 
 	    //recuperer les coord et générer la vignette
 	    $targ_w = $_POST['w'] ;
