@@ -65,7 +65,7 @@ if($isImage)
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Kyrielle Image Tag Editor</title>
+    <title>Kirielle Image Tag Editor</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 
 	<link rel="stylesheet" href="css/jquery.Jcrop.css" type="text/css" />

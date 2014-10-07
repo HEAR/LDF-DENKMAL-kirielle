@@ -47,7 +47,7 @@ function upload($file, $repository)
 	$name = removeSpaceAccents($name);
 
 	$pos 	   = strrpos($name, '.');
-	$extension = substr($name, $pos, strlen($name) );
+	$extension = strtolower( substr( $name, $pos, strlen($name) ) );
 	$nom 	   = substr($name, 0, $pos);
 	$cpt	   = 0;
 
@@ -60,17 +60,33 @@ function upload($file, $repository)
 		$name = $nom.'('.$cpt.')'.$extension;
 	}
 	
-	copy($file['tmp_name'], $repository.$name);
+	/*copy($file['tmp_name'], $repository.$name);*/
+
+	$image = new imageClass();
+
+	file_put_contents( $repository.$nom.$extension, file_get_contents( $file['tmp_name'] ) );
+	
+	$filename = $repository.$name;
+
+	$src = $image->setImage($filename)
+		      ->resize(800,600,'crop')
+		      ->save( $repository, $nom, $image->getFileType(), 95);
+
+	$vignette = $image->setImage($filename)
+		      ->resize(200,150,'crop')
+		      ->save( $repository, "vignette", $image->getFileType(), 95);
+
 
 
 	$json 		  = new stdClass();
-	$json->file   = $name;
+	$json->file   = $nom . '.' . $image->getFileType();
+	$json->credit = $_POST['credit'];
 	$json->thumbs = array();
 
 	file_put_contents($repository.'data.json', json_encode($json));
 
 
-	return $name;
+	return $nom . '.' . $image->getFileType();
 }
 
 
@@ -117,7 +133,7 @@ if( !empty( $_FILES['image_file']['name'] ) )
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Kyrielle Tag Image</title>
+	<title>Kirielle Tag Image</title>
 	<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 
 	<script src="js/jquery-1.11.1.min.js"></script>
@@ -161,8 +177,9 @@ if( !empty( $_FILES['image_file']['name'] ) )
 
 	<h2>Images :</h2>
 	<form action="" enctype="multipart/form-data" method="post">
-		<input type="file" value="" name="image_file" />
-		<input type="submit" value="Ajouter l'image"/>
+		<p><input type="file" value="" name="image_file" /></p>
+		<p><input type="text" value="" name="credit" placeholder="Nom — Lieu, 1 janvier 1970"/></p>
+		<p><input type="submit" value="Ajouter l'image"/></p>
 	</form>
 	<ul>
 		<?php
