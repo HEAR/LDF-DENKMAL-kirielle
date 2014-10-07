@@ -59,16 +59,17 @@ if(!empty($_GET['q'])) :
 </ul>
 <script>
 	$(document).ready(function(){
-		console.log('search ok');
 
 		$('ul#search li').click(function(event){
 
 			console.log( $(this).data('identifiant') );
 
-			$('#jquery-live-search').slideUp();
-
 			$('#tag').val( $(this).text() );
 			$('#identifiant').val( $(this).data('identifiant') );
+
+			$('#jquery-live-search').slideUp();
+
+			event.stopPropagation();
 
 		});
 

@@ -27,6 +27,11 @@
 	padding: 0;
 }
 
+#jquery-live-search li:hover{
+	text-decoration: underline;
+	cursor: pointer;
+}
+
 #jquery-live-search li{
 	margin-bottom: 2px;
 }
