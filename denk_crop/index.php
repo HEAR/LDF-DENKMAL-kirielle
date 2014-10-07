@@ -4,18 +4,35 @@ include_once('../config.php');
 include_once('image.class.php'); 
 
 
+
+/**
+ * http://www.weirdog.com/blog/php/supprimer-les-accents-des-caracteres-accentues.html
+ * @param  [type] $str     [description]
+ * @param  string $charset [description]
+ * @return [type]          [description]
+ */
+function wd_remove_accents($str, $charset='utf-8')
+{
+    $str = htmlentities($str, ENT_NOQUOTES, $charset);
+    
+    $str = preg_replace('#&([A-za-z])(?:acute|cedil|caron|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $str);
+    $str = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $str); // pour les ligatures e.g. '&oelig;'
+    $str = preg_replace('#&[^;]+;#', '', $str); // supprime les autres caractères
+    
+    return $str;
+}
+
 /**
  * Fonction qui sert à nettoyer le nom des fichiers
- * @param  [type] $valeur [description]
- * @return [type]         [description]
+ * @param  [type] $str [description]
+ * @return [type]      [description]
  */
-function makeFileName($valeur)
-{
-	$valeur = strtr($valeur,'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ',				'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
+function removeSpaceAccents($str){
 
-	$valeur = preg_replace('/([^.a-z0-9]+)/i', '_', $valeur);
+	$str = wd_remove_accents($str);
+	$str = preg_replace('/([^.a-z0-9]+)/i', '_', $str);
 
-	return $valeur;
+	return $str;
 }
 
 /**
@@ -27,7 +44,7 @@ function makeFileName($valeur)
 function upload($file, $repository)
 {	
 	$name = $file["name"];
-	$name = makeFileName($name);
+	$name = removeSpaceAccents($name);
 
 	$pos 	   = strrpos($name, '.');
 	$extension = substr($name, $pos, strlen($name) );
@@ -79,12 +96,12 @@ if( isset( $_POST['add_keyword']) && !empty($_POST['keyword'] ) )
 
 	$json              = new stdClass();
 	$json->mot         = $_POST['keyword'];
-	$json->identifiant = makeFileName($_POST['keyword']);
+	$json->identifiant = removeSpaceAccents($_POST['keyword']);
 	$json->images      = array();
 
 	$json              = json_encode($json);
 
-	file_put_contents(LOCAL_PATH.'/keywords/'.makeFileName($_POST['keyword']).'.json', $json);
+	file_put_contents(LOCAL_PATH.'/keywords/'.removeSpaceAccents($_POST['keyword']).'.json', $json);
 
 }
 

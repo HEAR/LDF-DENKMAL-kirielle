@@ -29,7 +29,7 @@ if($isImage)
 
 	    //genere le fichier json avec coord et tag
 	    $data = array (
-	        'tag' => $_POST['tag'],
+	        'tag' => $_POST['identifiant'],
 	        'x1'  => $_POST['x1'], 
 	        'y1'  => $_POST['y1'],
 	        'x2'  => $_POST['x2'],
@@ -55,7 +55,7 @@ if($isImage)
 	    imagecopyresampled($dst_r,$img_r,0,0,$_POST['x1'],$_POST['y1'],$targ_w,$targ_h,$_POST['w'],$_POST['h']);
 
 	    //enregistrer la vignette avec le tag
-	    imagejpeg($dst_r,$folderPATH.'/thumbs/'.$_POST['tag'].'.jpg',$jpeg_quality);
+	    imagejpeg($dst_r,$folderPATH.'/thumbs/'.$_POST['identifiant'].'.jpg',$jpeg_quality);
 	    imagedestroy($dst_r);
 	
 	}
@@ -68,6 +68,9 @@ if($isImage)
     <title>Kyrielle Image Tag Editor</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 
+	<link rel="stylesheet" href="css/jquery.Jcrop.css" type="text/css" />
+	<link rel="stylesheet" href="js/live-search/jquery.liveSearch.css" type="text/css" />
+
     <style type="text/css">
 	    #tagImg{
 	        position:absolute;
@@ -79,7 +82,7 @@ if($isImage)
 	    }
     </style>
 
-    <link rel="stylesheet" href="css/jquery.Jcrop.css" type="text/css" />
+    
 </head>
 <body>
 
@@ -130,7 +133,8 @@ if($isImage)
 		<label>w  <input type="number" size="4" id="w"  name="w" /></label>
 		<label>h  <input type="number" size="4" id="h"  name="h" /></label>
 		<div id="tagPos">
-			<input type="text" id="tag" name="tag" value="" placeholder="mot clef" /> 
+			<input type="text" id="tag" name="tag" value="" placeholder="mot clef" />
+			<input type="hidden" id="identifiant" name="identifiant" value="" />
 			<input type="submit" value="Sauver" />
 		</div>
 	</form>
@@ -144,6 +148,7 @@ if($isImage)
 
 	<script src="js/jquery-1.11.1.min.js"></script>
     <script src="js/jquery.Jcrop.js"></script>
+    <script src="js/live-search/jquery.liveSearch.js"></script>
     <script type="text/javascript">
 
     //Jcrop
@@ -165,9 +170,15 @@ if($isImage)
 			y1 = $('#y1').val(),
 			y2 = $('#y2').val();
 			jcrop_api.setSelect([x1,y1,x2,y2]);
+
+			$('#jquery-live-search').hide();
 		});
 
 		$('#tagPos').hide();
+
+		$('#tagPos input[name="tag"]').liveSearch({
+			url: 'search.php?q=',
+		});
 
     });
 
@@ -203,6 +214,7 @@ if($isImage)
     function clearCoords(){
         $('#coords input[type=number]').val('');
         $('#tagPos #tag').val('');
+        $('#tagPos #identifiant').val('');
         $('#tagPos').hide();
     };
     //fin Jcrop
