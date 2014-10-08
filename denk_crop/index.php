@@ -40,6 +40,9 @@ function upload($file, $repository)
 	
 	$filename = $repository.$name;
 
+	// cf
+	// https://github.com/nilopc/NilPortugues_Javascript_Multiple_JCrop/blob/master/index.php
+
 	$src = $image->setImage($filename)
 		      ->resize(800,600,'crop')
 		      ->save( $repository, $nom, $image->getFileType(), 95);
@@ -53,7 +56,7 @@ function upload($file, $repository)
 	$json 		  = new stdClass();
 	$json->file   = $nom . '.' . $image->getFileType();
 	$json->credit = $_POST['credit'];
-	$json->thumbs = array();
+	//$json->thumbs = array();
 
 	file_put_contents($repository.'data.json', json_encode($json));
 

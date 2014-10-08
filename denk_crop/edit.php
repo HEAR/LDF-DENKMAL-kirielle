@@ -13,6 +13,7 @@ if(!empty($_GET['image']) && is_file(LOCAL_PATH.'/data/'.$_GET['image'].'/'.$_GE
     $isImage = true;
 }
 
+
 /**
  * SI L'IMAGE EXISTE
  */
@@ -24,6 +25,14 @@ if($isImage)
 
 	$imagePATH  = $folderPATH.'/'.$_GET['image'].'.jpg';
 	$imageURL   = $folderURL.'/'.$_GET['image'].'.jpg';
+
+	if(!empty($_GET['remove']) && is_file($_GET['remove']))
+	{
+		unlink($_GET['remove']);
+
+		header('Location:'.URL.'/denk_crop/edit.php?image='.$_GET['image']);
+	}
+
 
 	if(isset($_POST['update']))
 	{
@@ -39,11 +48,11 @@ if($isImage)
 	        'h'   => $_POST['h']
 	    );
 
-	    $jsonString = file_get_contents($folderPATH.'/data.json');
+	    /*$jsonString = file_get_contents($folderPATH.'/data.json');
 	    $dataCoord  = json_decode($jsonString);
 	    array_push($dataCoord->thumbs, $data);
 	    $newJsonString = json_encode($dataCoord);
-	    file_put_contents($folderPATH.'/data.json', $newJsonString);
+	    file_put_contents($folderPATH.'/data.json', $newJsonString);*/
 
 	    //recuperer les coord et générer la vignette
 	    $targ_w = $_POST['w'] ;
@@ -59,6 +68,12 @@ if($isImage)
 	    {
 	    	mkdir($folderPATH.'/thumbs');
 	    }
+
+	    $jsonKeyword = json_decode( file_get_contents( LOCAL_PATH."/keywords/$_POST[identifiant].json" ) );
+	    $jsonKeyword->images[] = $_GET['image'];
+	    $jsonKeyword->images   = array_unique($jsonKeyword->images);
+	    file_put_contents(  LOCAL_PATH."/keywords/$_POST[identifiant].json" ,json_encode( $jsonKeyword ) );
+
 
 	    //enregistrer la vignette avec le tag
 	    imagejpeg($dst_r,$folderPATH.'/thumbs/'.$_POST['identifiant'].'['.$_POST['x1'].'x'.$_POST['y1'].'].jpg',$jpeg_quality);
@@ -78,11 +93,16 @@ if($isImage)
 	<link rel="stylesheet" href="../js/live-search/jquery.liveSearch.css" type="text/css" />
 
     <style type="text/css">
-	   .tagImg{
+	   	.tagImg{
 	        position:absolute;
 	        background-color: pink;
 	        opacity: 0.4;
 	    }
+	
+		.tagImg:hover{
+			opacity: 0.7;
+		}
+
 	    .wrapper{
 	        position: relative;
 	    }
@@ -109,6 +129,7 @@ if($isImage)
 		<?php
 
 			$thumbFolder  = $folderPATH . '/thumbs/';
+			$zindex = 800;
 
 			foreach( glob( "{" . $thumbFolder . '*.jpg}', GLOB_BRACE ) as $file )
 			{
@@ -128,7 +149,9 @@ if($isImage)
 					$w = $dim[0];
 					$h = $dim[1];
 
-					echo "<div class='tagImg' style='top:{$y}px; left:{$x}px; width:{$w}px; height:{$h}px;' data-path='$file'>$nom</div>";
+					echo "<div class='tagImg' style='top:{$y}px; left:{$x}px; width:{$w}px; height:{$h}px; z-index:{$zindex};' data-path='$file'>$nom</div>";
+
+					$zindex ++ ;
 				}
 			}
 
@@ -193,7 +216,9 @@ if($isImage)
 		});
 
 		$('.tagImg').dblclick(function(event){
-			alert($(this).data('path'));
+			//alert($(this).data('path'));
+
+			location.href='<?php echo $_SERVER['REQUEST_URI']; ?>&remove='+$(this).data('path');
 		})
 
     });

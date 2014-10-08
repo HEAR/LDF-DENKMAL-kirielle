@@ -1,61 +1,39 @@
 <?php
 
-	include_once( 'config.php' );
-	include_once(LOCAL_PATH.'/fonctions.php');
-
-?><!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-	<title>Kirielle</title>
-	<link rel="stylesheet" href="<?php echo URL;?>/css/style.css" />
-
-	<style type="text/css">
-	   .tagImg{
-	        position:absolute;
-	        border: solid pink 1px;
-	        opacity: 0.4;
-	    }
-	    .wrapper{
-	        position: relative;
-	    }
-    </style>
-</head>
+include_once( 'config.php' );
+include_once(LOCAL_PATH.'/fonctions.php');
 
 
 
-<body>
-	<h1>Kirielle</h1>
+// on utilise le fichier .htaccess pour récupérer une belle adresse au lieu d'avoir une adresse avec parametre du type ?url=nom_de_l_image
+// ainsi le projet aura des url du type denkmal/kirielle/nom_de_l_image
 
-		<?php
+if( !empty( $_GET['url'] ) )
+{
+	$param = explode( '/', $_GET['url'] );
 
-		// on utilise le fichier .htaccess pour récupérer une belle adresse au lieu d'avoir une adresse avec parametre du type ?url=nom_de_l_image
-		// ainsi le projet aura des url du type denkmal/kirielle/nom_de_l_image
+	// pour supprimer les lignes vides
+	$param = array_filter($param, 'strlen');
 
-		if( !empty( $_GET['url'] ) )
+
+	/*echo "<ul>";
+	foreach ($param as $key => $value) {
+		//if( !empty( $value ) )
+		echo "<li>$value</li>";
+	}
+	echo "</ul>";
+	*/
+
+	if( count($param) == 2)
+	{
+
+		switch($param[0])
 		{
-			$param = explode( '/', $_GET['url'] );
 
-			// pour supprimer les lignes vides
-			$param = array_filter($param, 'strlen');
+			case "image" :
 
-		?>
-
-		<h3>Chemin :</h3>
-
-		<?php
-
-			echo "<ul>";
-			foreach ($param as $key => $value) {
-				//if( !empty( $value ) )
-				echo "<li>$value</li>";
-			}
-			echo "</ul>";
-
-
-			if( count($param) >= 2 && $param[0] == 'image')
-			{
+				include_once('header.php');
+				// DEBUT image 
 				$imageName = $param[1];
 
 				if( is_file( LOCAL_PATH."/data/$imageName/$imageName.jpg" ) )
@@ -89,81 +67,102 @@
 					}
 
 					echo "</div>\n";
-
+					// FIN image
 				}
 				else
 				{
 					echo "<p>L'image n'existe pas</p>";
 				}
 
-			}
-			else if( count($param) == 1 )
-			{
-				echo "<p>On est sur une page<p>";
+				include_once('footer.php');
 
-				switch ( $param[0] )
-				{
+			break;
 
-					case 'a_propos' :
+			case "tag" :
 
-						echo "<p>Page à propos</p>";
+				$targetImages = json_decode( file_get_contents( LOCAL_PATH."/keywords/{$param[1]}.json" ) )->images;
+				$imageName    = $targetImages[array_rand($targetImages, 1) ];
 
-					break;
+				header( 'Location:'.URL."/image/{$imageName}/" );
 
-					case 'autre' :
+				// DEBUT tag
+				// echo "<p>TAG : $param[1]</p>";
+				// FIN tag
 
-						echo "<p>Page autre</p>";
+			break;
 
-					break;
-
-					case 'HD' :
-
-						echo "<p>Page HD</p>";
-
-					break;
-
-					case 'image' :
-
-						echo "<p>Il n'y a aucune image ici</p>";
-
-					break;
-
-					default :
-
-						echo "<p>La page que vous cherchez n'existe pas. <a href='./'>Revenir à l'accueil</a></p>";
-						// header('Location:./');
-
-					break;
-
-				}
-
-			}	
+			default:
+				echo "<p>???</p>";
+			break;
 
 		}
-		else
+
+	}
+	else if( count($param) == 1 )
+	{
+		include_once('header.php');
+		echo "<p>On est sur une page<p>";
+
+		switch ( $param[0] )
 		{
 
-			echo "<p>Accueil</p>";
+			case 'a_propos' :
+
+				echo "<p>Page à propos</p>";
+
+			break;
+
+			case 'autre' :
+
+				echo "<p>Page autre</p>";
+
+			break;
+
+			case 'HD' :
+
+				echo "<p>Page HD</p>";
+
+			break;
+
+			case 'image' :
+
+				echo "<p>Il n'y a aucune image ici</p>";
+
+			break;
+
+			default :
+
+				echo "<p>La page que vous cherchez n'existe pas. <a href='./'>Revenir à l'accueil</a></p>";
+				// header('Location:./');
+
+			break;
 
 		}
-			
 
-	?>
-	
-	<script src="<?php echo URL;?>/js/jquery-1.11.1.min.js"></script>
-	<script>
+		include_once('footer.php');
 
-		$(document).ready(function(){
+	}	
 
-			$('.tagImg').click(function(event){
+}
+else
+{
+	include_once('header.php');
+	echo "<p>Accueil</p>";
+	echo "<ul>";
+	foreach( glob( "{" . LOCAL_PATH . '/keywords/*.json}', GLOB_BRACE ) as $file )
+	{
 
-				console.log( $(this).data('tag') );
+		$info = json_decode(file_get_contents($file));
 
-			});		
+		$keyword      = $info->mot;
+		$identifiant  = $info->identifiant;
 
-		});
+		if( count( $info->images ) > 0 )
+		{
+			echo "<li><a href='".URL."/tag/$identifiant/'>$keyword</a></li>";
+		}
+	}
+	echo "</ul>";
+	include_once('footer.php');
 
-	</script>
-
-</body>
-</html>
+}
