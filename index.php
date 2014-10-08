@@ -46,6 +46,7 @@ if( !empty( $_GET['url'] ) )
 
 					$thumbFolder  = LOCAL_PATH."/data/$imageName/thumbs/";
 
+					// POUR GENERER LES CASES SUR LA PHOTO
 					foreach( glob( "{" . $thumbFolder . '*.jpg}', GLOB_BRACE ) as $file )
 					{
 						if( is_file( $file ) )
@@ -62,11 +63,27 @@ if( !empty( $_GET['url'] ) )
 							$w = $dim[0];
 							$h = $dim[1];
 
+							$keywords[] = $nom;
+
 							echo "<div class='tagImg' style='top:{$y}px; left:{$x}px; width:{$w}px; height:{$h}px;' data-tag='$nom'></div>\n";
 						}
 					}
 
 					echo "</div>\n";
+
+
+					// POUR GENERER LA LISTE DES MOTS CLEFS
+					$keywords = array_unique($keywords);
+
+					echo "<ul id='tags'>\n";
+					foreach ($keywords as $key => $value) {
+						
+						echo "<li class='$value'>";
+						echo json_decode( file_get_contents( LOCAL_PATH."/keywords/{$value}.json" ) )->mot;
+						echo "</li>\n";
+
+					}
+					echo "</ul>\n";
 					// FIN image
 				}
 				else

@@ -16,6 +16,11 @@
 	    .wrapper{
 	        position: relative;
 	    }
+	
+		.activeTag{
+			color:#FF0000;
+		}
+
     </style>
 </head>
 
