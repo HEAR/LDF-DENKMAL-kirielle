@@ -1,6 +1,7 @@
 <?php
 
 include_once('../config.php');
+include_once(LOCAL_PATH.'/fonctions.php');
 
 $isImage = false;
 
@@ -54,8 +55,13 @@ if($isImage)
 	    $dst_r  = ImageCreateTrueColor( $targ_w, $targ_h );
 	    imagecopyresampled($dst_r,$img_r,0,0,$_POST['x1'],$_POST['y1'],$targ_w,$targ_h,$_POST['w'],$_POST['h']);
 
+	    if( !is_dir($folderPATH.'/thumbs') )
+	    {
+	    	mkdir($folderPATH.'/thumbs');
+	    }
+
 	    //enregistrer la vignette avec le tag
-	    imagejpeg($dst_r,$folderPATH.'/thumbs/'.$_POST['identifiant'].'.jpg',$jpeg_quality);
+	    imagejpeg($dst_r,$folderPATH.'/thumbs/'.$_POST['identifiant'].'['.$_POST['x1'].'x'.$_POST['y1'].'].jpg',$jpeg_quality);
 	    imagedestroy($dst_r);
 	
 	}
@@ -69,10 +75,10 @@ if($isImage)
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 
 	<link rel="stylesheet" href="css/jquery.Jcrop.css" type="text/css" />
-	<link rel="stylesheet" href="js/live-search/jquery.liveSearch.css" type="text/css" />
+	<link rel="stylesheet" href="../js/live-search/jquery.liveSearch.css" type="text/css" />
 
     <style type="text/css">
-	    #tagImg{
+	   .tagImg{
 	        position:absolute;
 	        background-color: pink;
 	        opacity: 0.4;
@@ -89,49 +95,55 @@ if($isImage)
 <?php if($isImage) : ?>
 
 	<p><a href="./">Revenir à l'accueil</a></p>
-	
-    <p><?php echo $imagePATH; ?></p>
-    <p><?php echo $imageURL; ?></p>
+
+    <h3><?php
+
+	$json = json_decode( file_get_contents( $folderPATH.'/data.json' ) );
+    echo $json->credit;
+
+    ?></h3>
 
     <!-- Img a croper -->
     <div class="wrapper">
 		<img src="<?php echo $imageURL; ?>" id="target" alt="" />
-		<?php //placement des vignettes
-			$jsonF = file_get_contents($folderPATH.'/data.json');
-			$coord = json_decode($jsonF,true);
-			$compteur = count($coord);
-
-			if($compteur > 0)
-			{
-				for($i=0; $i<$compteur; $i ++)
-				{
-					if( !empty($coord[$i]['tag'] ) && $coord[$i]['tag'] != null)
-					{
-						$posX = $coord[$i]['x1'];
-						$posY = $coord[$i]['y1'];
-						$h 	  = $coord[$i]['h'];
-						$w 	  = $coord[$i]['w'];
-						$tag  = $coord[$i]['tag'];
-			?>
-
-		<div id="tagImg" style="top:<?php echo $posY ?>px; left:<?php echo $posX ?>px; width:<?php echo $w?>px; height:<?php echo $h?>px;"><?php echo $tag?></div>
-
 		<?php
-					}
+
+			$thumbFolder  = $folderPATH . '/thumbs/';
+
+			foreach( glob( "{" . $thumbFolder . '*.jpg}', GLOB_BRACE ) as $file )
+			{
+				//echo $file;
+
+				if( is_file( $file ) )
+				{	
+					$dim =  getimagesize($file);
+
+					$fileName = str_replace($thumbFolder, '', $file);
+
+					$info = getCoordFromName($fileName);
+
+					$nom = $info->nom;
+					$x = $info->x;
+					$y = $info->y;
+					$w = $dim[0];
+					$h = $dim[1];
+
+					echo "<div class='tagImg' style='top:{$y}px; left:{$x}px; width:{$w}px; height:{$h}px;' data-path='$file'>$nom</div>";
 				}
 			}
+
 		?>
 	</div>
 
 	<!-- Formulaire pour recuperer les coord et le tag -->
 	<form id="coords" class="coords" method="post" action="">
 		<input type="hidden" name="update">
-		<label>x1 <input type="number" size="4" id="x1" name="x1"/></label>
-		<label>y1 <input type="number" size="4" id="y1" name="y1"/></label>
-		<label>x2 <input type="number" size="4" id="x2" name="x2"/></label>
-		<label>y2 <input type="number" size="4" id="y2" name="y2"/></label>		
-		<label>w  <input type="number" size="4" id="w"  name="w" /></label>
-		<label>h  <input type="number" size="4" id="h"  name="h" /></label>
+		<input type="hidden" id="x1" name="x1" />
+		<input type="hidden" id="y1" name="y1" />
+		<input type="hidden" id="x2" name="x2" />
+		<input type="hidden" id="y2" name="y2" />		
+		<input type="hidden" id="w"  name="w"  />
+		<input type="hidden" id="h"  name="h"  />
 		<div id="tagPos">
 			<input type="text" id="tag" name="tag" value="" placeholder="mot clef" />
 			<input type="hidden" id="identifiant" name="identifiant" value="" />
@@ -146,9 +158,9 @@ if($isImage)
 
 	<?php endif;?>
 
-	<script src="js/jquery-1.11.1.min.js"></script>
-    <script src="js/jquery.Jcrop.js"></script>
-    <script src="js/live-search/jquery.liveSearch.js"></script>
+	<script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/jquery.Jcrop.js"></script>
+    <script src="../js/live-search/jquery.liveSearch.js"></script>
     <script type="text/javascript">
 
     //Jcrop
@@ -179,6 +191,10 @@ if($isImage)
 		$('#tagPos input[name="tag"]').liveSearch({
 			url: 'search.php?q=',
 		});
+
+		$('.tagImg').dblclick(function(event){
+			alert($(this).data('path'));
+		})
 
     });
 

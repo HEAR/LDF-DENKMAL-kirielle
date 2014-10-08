@@ -2,38 +2,10 @@
 
 include_once('../config.php');
 include_once('image.class.php'); 
+include_once(LOCAL_PATH.'/fonctions.php');
 
 
 
-/**
- * http://www.weirdog.com/blog/php/supprimer-les-accents-des-caracteres-accentues.html
- * @param  [type] $str     [description]
- * @param  string $charset [description]
- * @return [type]          [description]
- */
-function wd_remove_accents($str, $charset='utf-8')
-{
-    $str = htmlentities($str, ENT_NOQUOTES, $charset);
-    
-    $str = preg_replace('#&([A-za-z])(?:acute|cedil|caron|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $str);
-    $str = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $str); // pour les ligatures e.g. '&oelig;'
-    $str = preg_replace('#&[^;]+;#', '', $str); // supprime les autres caractères
-    
-    return $str;
-}
-
-/**
- * Fonction qui sert à nettoyer le nom des fichiers
- * @param  [type] $str [description]
- * @return [type]      [description]
- */
-function removeSpaceAccents($str){
-
-	$str = wd_remove_accents($str);
-	$str = preg_replace('/([^.a-z0-9]+)/i', '_', $str);
-
-	return $str;
-}
 
 /**
  * Sert à uploader une image dans un dossier à son nom
@@ -136,8 +108,6 @@ if( !empty( $_FILES['image_file']['name'] ) )
 	<title>Kirielle Tag Image</title>
 	<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 
-	<script src="js/jquery-1.11.1.min.js"></script>
-
 </head>
 <body>
 
@@ -205,7 +175,7 @@ if( !empty( $_FILES['image_file']['name'] ) )
 	</ul>
 
 
-
+	<script src="../js/jquery-1.11.1.min.js"></script>
 	<script>
 		$(document).ready(function(){
 			$('.suppr').click(function(event){
