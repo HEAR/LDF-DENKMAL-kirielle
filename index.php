@@ -1,38 +1,34 @@
 <?php
 
 	include_once( 'config.php' );
+	include_once(LOCAL_PATH.'/fonctions.php');
 
 ?><!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 	<title>Kirielle</title>
-	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="<?php echo URL;?>/css/style.css" />
+
+	<style type="text/css">
+	   .tagImg{
+	        position:absolute;
+	        border: solid pink 1px;
+	        opacity: 0.4;
+	    }
+	    .wrapper{
+	        position: relative;
+	    }
+    </style>
 </head>
+
+
+
 <body>
 	<h1>Kirielle</h1>
 
-	<?php
-
-		/*
-		
-		$templateListe = array();
-		foreach(glob("{".LOCAL_PATH.SLIDE_TEMPLATE_FOLDER."*}",GLOB_BRACE) as $folder){
-		    
-		        if(is_dir($folder)){
-		        	$dossier = str_replace(LOCAL_PATH.SLIDE_TEMPLATE_FOLDER,'',$folder);
-		        	if($dossier != 'default' && $dossier != 'meteo'){
-		      			$templateListe[$dossier] = $dossier ;
-		      		}
-				}
-		}
-
-		 */
-
-		/*foreach(glob("{".LOCAL_PATH.SLIDE_TEMPLATE_FOLDER."*}",GLOB_BRACE) as $folder){
-
-		}*/
+		<?php
 
 		// on utilise le fichier .htaccess pour récupérer une belle adresse au lieu d'avoir une adresse avec parametre du type ?url=nom_de_l_image
 		// ainsi le projet aura des url du type denkmal/kirielle/nom_de_l_image
@@ -66,7 +62,34 @@
 				{
 					$imageURL = URL."/data/$imageName/$imageName.jpg";
 
-					echo "<img src='$imageURL'>";
+					echo "<div class='wrapper'>\n";
+					echo "<img src='$imageURL' alt='image'/>\n";
+
+
+					$thumbFolder  = LOCAL_PATH."/data/$imageName/thumbs/";
+
+					foreach( glob( "{" . $thumbFolder . '*.jpg}', GLOB_BRACE ) as $file )
+					{
+						if( is_file( $file ) )
+						{	
+							$dim =  getimagesize($file);
+
+							$fileName = str_replace($thumbFolder, '', $file);
+
+							$info = getCoordFromName($fileName);
+
+							$nom = $info->nom;
+							$x = $info->x;
+							$y = $info->y;
+							$w = $dim[0];
+							$h = $dim[1];
+
+							echo "<div class='tagImg' style='top:{$y}px; left:{$x}px; width:{$w}px; height:{$h}px;' data-tag='$nom'></div>\n";
+						}
+					}
+
+					echo "</div>\n";
+
 				}
 				else
 				{
@@ -99,6 +122,12 @@
 
 					break;
 
+					case 'image' :
+
+						echo "<p>Il n'y a aucune image ici</p>";
+
+					break;
+
 					default :
 
 						echo "<p>La page que vous cherchez n'existe pas. <a href='./'>Revenir à l'accueil</a></p>";
@@ -120,6 +149,21 @@
 			
 
 	?>
+	
+	<script src="<?php echo URL;?>/js/jquery-1.11.1.min.js"></script>
+	<script>
+
+		$(document).ready(function(){
+
+			$('.tagImg').click(function(event){
+
+				console.log( $(this).data('tag') );
+
+			});		
+
+		});
+
+	</script>
 
 </body>
 </html>
