@@ -1,0 +1,13 @@
+ .tagImg{
+ 	position:absolute;
+ 	border: solid pink 1px;
+ 	opacity: 0.4;
+ 	cursor: pointer;
+ }
+ .wrapper{
+ 	position: relative;
+ }
+
+ .activeTag{
+ 	color:#FF0000;
+ }

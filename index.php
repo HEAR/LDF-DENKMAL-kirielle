@@ -165,6 +165,9 @@ else
 {
 	include_once('header.php');
 	echo "<p>Accueil</p>";
+	echo "<p>Cérémonies du 11 novembre. Plusieurs lieux de commémoration. Des dizaines de jeunes photographes témoignent de ces instants.</p>
+	<p>Juxtaposées, toutes ces images sont des points de vue qui se croisent, se répondent et se complètent. Elles créent des 11 novembre.</p>
+	<p>Parcourez les images, dénichez les zones de liens et <a href='#'>empruntez vos propres pistes</a>.</p>";
 	echo "<ul>";
 	foreach( glob( "{" . LOCAL_PATH . '/keywords/*.json}', GLOB_BRACE ) as $file )
 	{

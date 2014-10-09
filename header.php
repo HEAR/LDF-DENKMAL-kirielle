@@ -5,23 +5,6 @@
 	<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 	<title>Kirielle</title>
 	<link rel="stylesheet" href="<?php echo URL;?>/css/style.css" />
-
-	<style type="text/css">
-	   .tagImg{
-	        position:absolute;
-	        border: solid pink 1px;
-	        opacity: 0.4;
-	        cursor: pointer;
-	    }
-	    .wrapper{
-	        position: relative;
-	    }
-	
-		.activeTag{
-			color:#FF0000;
-		}
-
-    </style>
 </head>
 
 
