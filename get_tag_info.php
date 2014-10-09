@@ -30,16 +30,17 @@ if(isset( $_GET['tag'] ) ){
 					
 			foreach( glob( "{" . $filePath ."{$info->identifiant}*.jpg}", GLOB_BRACE ) as $vignette )
 			{
+				//echo $vignette."\n";
 
 				$retour = new stdClass();
 
 				$fileName = str_replace($filePath, "", $vignette);
 				$fileInfo = getCoordFromName($fileName);
-				$fileURL  = str_replace($filePath, $fileURL, $vignette);
+				$fileURL  = URL. "/data/{$file}/thumbs/$fileName";
 
 				$retour->url = $fileURL;
-				$retour->x  = $fileInfo->x;
-				$retour->y  = $fileInfo->y;
+				$retour->x   = $fileInfo->x;
+				$retour->y   = $fileInfo->y;
 				$retour->target = URL. "/image/{$file}/";
 
 				$listeThumbs[] = $retour;
