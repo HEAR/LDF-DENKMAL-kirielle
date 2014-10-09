@@ -121,6 +121,7 @@ if( !empty( $_GET['url'] ) )
 
 			case 'a_propos' :
 
+				//include  page à propos
 				echo "<p>Page à propos</p>";
 
 			break;
@@ -164,11 +165,12 @@ else
 
 	include_once('header.php');
 	echo "<div id='accueil'>";
+	//kirielle
 	echo "<p>Cérémonies du 11 novembre. Plusieurs lieux de commémoration. Des dizaines de jeunes photographes témoignent de ces instants.</p>
 	<p>Juxtaposées, toutes ces images sont des points de vue qui se croisent, se répondent et se complètent. Elles créent des 11 novembre.</p>
 	<p>Parcourez les images, dénichez les zones de liens et <a href='#' id='go'>empruntez vos propres pistes</a>.</p>";
 	echo "<p>Actuellement 2 années, 5 cérémonies, 23 photographes, {$nbrImages} images et {$nbrKeyword} mots-clés</p>";
-	echo "<ul>";
+	//echo "<ul>";
 
 	$listeTags = array();
 
@@ -182,7 +184,7 @@ else
 
 		if( count( $info->images ) > 0 )
 		{
-			echo "<li><a href='".URL."/tag/$identifiant/'>$keyword</a></li>";
+			//echo "<li><a href='".URL."/tag/$identifiant/'>$keyword</a></li>";
 
 			$listeTags[] = $identifiant;
 		}
@@ -190,7 +192,7 @@ else
 
 	$listeTags = implode(',',$listeTags);
 
-	echo "</ul>";
+	//echo "</ul>";
 	echo "</div>";
 	echo "<div id='tags' data-tags='{$listeTags}'><h1>ok</h1></div>";
 	include_once('footer.php');
