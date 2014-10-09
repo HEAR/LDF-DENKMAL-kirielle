@@ -3,8 +3,6 @@
 include_once( 'config.php' );
 include_once(LOCAL_PATH.'/fonctions.php');
 
-
-
 // on utilise le fichier .htaccess pour récupérer une belle adresse au lieu d'avoir une adresse avec parametre du type ?url=nom_de_l_image
 // ainsi le projet aura des url du type denkmal/kirielle/nom_de_l_image
 
@@ -14,15 +12,6 @@ if( !empty( $_GET['url'] ) )
 
 	// pour supprimer les lignes vides
 	$param = array_filter($param, 'strlen');
-
-
-	/*echo "<ul>";
-	foreach ($param as $key => $value) {
-		//if( !empty( $value ) )
-		echo "<li>$value</li>";
-	}
-	echo "</ul>";
-	*/
 
 	if( count($param) == 2)
 	{

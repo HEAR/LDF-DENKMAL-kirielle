@@ -44,18 +44,6 @@ if(isset( $_GET['tag'] ) ){
 				$retour->target = URL. "/image/{$file}/";
 
 				$listeThumbs[] = $retour;
-
-				/*$info = json_decode(file_get_contents($file));
-
-				$keyword      = $info->mot;
-				$identifiant  = $info->identifiant;
-
-				if( count( $info->images ) > 0 )
-				{
-					echo "<li><a href='".URL."/tag/$identifiant/'>$keyword</a></li>";
-
-					$listeTags[] = $identifiant;
-				}*/
 			} 
 		}	
 	}
