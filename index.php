@@ -60,7 +60,7 @@ if( !empty( $_GET['url'] ) )
 						}
 					}
 
-					echo "<h3>";
+					echo "<h3>© ";
 					echo json_decode( file_get_contents( LOCAL_PATH."/data/$imageName/data.json" ) )->credit;
 					echo "</h3>";
 
