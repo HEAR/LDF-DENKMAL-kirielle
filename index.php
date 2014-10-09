@@ -65,12 +65,15 @@ if( !empty( $_GET['url'] ) )
 
 							$keywords[] = $nom;
 
-							echo "<div class='tagImg' style='top:{$y}px; left:{$x}px; width:{$w}px; height:{$h}px;' data-tag='$nom'></div>\n";
+							$link = URL.'/tag/'.$nom.'/';
+
+							echo "<a href='{$link}'><div class='tagImg' style='top:{$y}px; left:{$x}px; width:{$w}px; height:{$h}px;' data-tag='$nom'></div></a>\n";
 						}
 					}
 
-					echo "</div>\n";
-
+					echo "<h3>";
+					echo json_decode( file_get_contents( LOCAL_PATH."/data/$imageName/data.json" ) )->credit;
+					echo "</h3>";
 
 					// POUR GENERER LA LISTE DES MOTS CLEFS
 					$keywords = array_unique($keywords);
@@ -78,12 +81,16 @@ if( !empty( $_GET['url'] ) )
 					echo "<ul id='tags'>\n";
 					foreach ($keywords as $key => $value) {
 						
-						echo "<li class='$value'>";
+						echo "<li class='$value'><span>";
 						echo json_decode( file_get_contents( LOCAL_PATH."/keywords/{$value}.json" ) )->mot;
-						echo "</li>\n";
+						echo "</span></li>\n";
 
 					}
 					echo "</ul>\n";
+
+					echo "</div>\n";
+
+					
 					// FIN image
 				}
 				else
@@ -163,12 +170,19 @@ if( !empty( $_GET['url'] ) )
 }
 else
 {
+	$nbrKeyword = count( glob( LOCAL_PATH . '/keywords/*.json' ) );
+	$nbrImages = count( glob( LOCAL_PATH . '/data/*/' ) );
+
 	include_once('header.php');
-	echo "<p>Accueil</p>";
+	echo "<div id='accueil'>";
 	echo "<p>Cérémonies du 11 novembre. Plusieurs lieux de commémoration. Des dizaines de jeunes photographes témoignent de ces instants.</p>
 	<p>Juxtaposées, toutes ces images sont des points de vue qui se croisent, se répondent et se complètent. Elles créent des 11 novembre.</p>
-	<p>Parcourez les images, dénichez les zones de liens et <a href='#'>empruntez vos propres pistes</a>.</p>";
+	<p>Parcourez les images, dénichez les zones de liens et <a href='#' id='go'>empruntez vos propres pistes</a>.</p>";
+	echo "<p>Actuellement 2 années, 5 cérémonies, 23 photographes, {$nbrImages} images et {$nbrKeyword} mots-clés</p>";
 	echo "<ul>";
+
+	$listeTags = array();
+
 	foreach( glob( "{" . LOCAL_PATH . '/keywords/*.json}', GLOB_BRACE ) as $file )
 	{
 
@@ -180,9 +194,16 @@ else
 		if( count( $info->images ) > 0 )
 		{
 			echo "<li><a href='".URL."/tag/$identifiant/'>$keyword</a></li>";
+
+			$listeTags[] = $identifiant;
 		}
 	}
+
+	$listeTags = implode(',',$listeTags);
+
 	echo "</ul>";
+	echo "</div>";
+	echo "<div id='tags' data-tags='{$listeTags}'><h1>ok</h1></div>";
 	include_once('footer.php');
 
 }

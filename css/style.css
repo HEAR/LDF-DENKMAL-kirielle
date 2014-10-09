@@ -1,13 +1,74 @@
- .tagImg{
- 	position:absolute;
- 	border: solid pink 1px;
- 	opacity: 0.4;
- 	cursor: pointer;
- }
- .wrapper{
- 	position: relative;
- }
+#page{
+	width: 800px;
+	margin: auto;
+}
 
- .activeTag{
- 	color:#FF0000;
- }
+.tagImg{
+	position:absolute;
+	border: solid pink 1px;
+	opacity: 0.4;
+	cursor: pointer;
+}
+.wrapper{
+	position: relative;
+}
+
+.activeTag span{
+	color:#FF0000;
+}
+
+.wrapper h3{
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+	margin: 0;
+	padding:5px 8px;
+	background: #000;
+	color:#999;
+	font-weight: normal;
+	font-size: 12px;
+}
+
+.wrapper ul{
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
+	margin: 0;
+	padding: 5px;
+	list-style: none;
+	background: #FFF;
+}
+
+.wrapper ul li{
+	display: inline-block;
+	float: left;
+	margin: 0;
+	padding: 0;
+}
+
+.wrapper ul li:before{
+	content: ", ";
+}
+
+.wrapper ul li:first-child:before{
+	content: "";	
+}
+
+#tags{
+	display: none;
+	background: #FF0000;
+	width: 800px;
+	height: 600px;
+	position: relative;
+}
+
+#tags h1{
+	text-align: center;
+	line-height: 80px;
+	width: 800px;
+	font-size: 80px;
+	position: absolute;
+	z-index: 500;
+	top:50%;
+	margin-top:-20px;
+}

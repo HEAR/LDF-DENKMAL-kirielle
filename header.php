@@ -10,4 +10,5 @@
 
 
 <body>
-	<h1><a href="<?php echo URL?>">Kirielle</a></h1>
+	<div id="page">
+		<h1><a href="<?php echo URL?>">Kirielle</a></h1>
