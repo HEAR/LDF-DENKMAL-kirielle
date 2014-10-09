@@ -67,7 +67,7 @@ if( !empty( $_GET['url'] ) )
 					// POUR GENERER LA LISTE DES MOTS CLEFS
 					$keywords = array_unique($keywords);
 
-					echo "<ul id='tags'>\n";
+					echo "<ul id='listetags'>\n";
 					foreach ($keywords as $key => $value) {
 						
 						echo "<li class='$value'><span>";
