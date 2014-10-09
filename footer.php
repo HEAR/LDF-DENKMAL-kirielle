@@ -21,11 +21,11 @@
 			})
 
 			$('.tagImg').mouseover(function(){
-				$("ul#tags").find('.'+$(this).data('tag')).addClass('activeTag');
+				$("ul#listetags").find('.'+$(this).data('tag')).addClass('activeTag');
 			});
 
 			$('.tagImg').mouseout(function(){
-				$("ul#tags li").removeClass('activeTag');
+				$("ul#listetags li").removeClass('activeTag');
 			});
 
 
