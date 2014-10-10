@@ -1,15 +1,35 @@
 
 	</div>
-	<div id="credit"><p>Conception, réalisation : Lucas Descroix, Arman Mohtadji, Léna Robin</br>
-Remerciements : Philippe Delangle, Thomas Deyriès, Loïc Horellou</p></div>
-	<div id="apropos"><a href="<?php echo URL;?>">Accueil</a><a>Crédits</a></div>	
+	<div id="credit">
+		<p>Conception, réalisation : Lucas Descroix, Arman Mohtadji, Léna Robin</br>
+		Remerciements : Thomas Deyriès, Loïc Horellou, Alain Willaume, Philippe Delangle</p>
+	</div>
+	<div id="apropos">
+		<a href="<?php echo URL;?>">Accueil</a><a href="" id="credit_btn">Crédits</a>
+	</div>	
 
 	<!-- fin #page -->
 	
 	<script src="<?php echo URL;?>/js/jquery-1.11.1.min.js"></script>
 	<script>
 
+		var start = 0;
+
 		$(document).ready(function(){
+
+			$("#credit_btn").click(function(event){
+				$("#apropos").slideUp();
+				$("#credit").slideDown();
+
+				event.preventDefault();
+			});
+
+			$("#credit").click(function(event){
+				$("#apropos").slideDown();
+				$("#credit").slideUp();
+
+				event.preventDefault();
+			});
 
 			$("#go").click(function(event){
 				$("#accueil").hide();
@@ -44,14 +64,15 @@ Remerciements : Philippe Delangle, Thomas Deyriès, Loïc Horellou</p></div>
 
 		function updateVignettes(){
 			$tags = $("#tags").data("tags").split(',');
-			var rand = Math.floor( Math.random() * $tags.length );
+			//var rand = Math.floor( Math.random() * $tags.length );
 
-			$("#tags img").remove();
+			
 			
 			$.ajax({
-					url: "<?php echo URL;?>/get_tag_info.php?tag="+$tags[rand],
+					url: "<?php echo URL;?>/get_tag_info.php?tag="+$tags[ start ],
 					dataType: 'json',
 					success:function(data){
+						$("#tags img").remove();
 
 						console.log(data);
 
@@ -70,6 +91,12 @@ Remerciements : Philippe Delangle, Thomas Deyriès, Loïc Horellou</p></div>
 						});
 
 						$("#tags").show();
+
+						start ++ ;
+
+						if(start >= $tags.length){
+							start = 0;
+						}
 					}
 			});
 		}

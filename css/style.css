@@ -21,13 +21,6 @@ time, mark, audio, video {
 
 
 @font-face {
-	font-family: 'frutigerBold';
-    src: url('./font/FrutigerLTStd-Bold.otf');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
 	font-family: 'universElseBold';
     src: url('../font/UniversElse-Bold.ttf');
     font-weight: normal;
@@ -43,12 +36,13 @@ time, mark, audio, video {
 
 body{
 	background-color: rgb(150,150,150);
+	font-family: 'universElseReg';
 }
 
 #page{
 	width: 1000px;
 	height: 650px;
-	background-color: rgb(255,70,11);
+	/*background-color: rgb(255,70,11);*/
 	margin:100px auto 0 auto ;
 	/*margin: auto;*/
 }
@@ -58,6 +52,8 @@ body{
 	border: solid black 1px;
 	opacity: 0.4;
 	cursor: pointer;
+	-webkit-animation: hidetag 7s forwards;
+    animation: hidetag 7s forwards;
 }
 .wrapper{
 	position: relative;
@@ -68,7 +64,7 @@ body{
 }
 
 .wrapper h3{
-	font-family: universElseReg, sans-serif;
+	font-family: 'universElseReg', sans-serif;
 	color: white;
 	position: absolute;
 	bottom: 20px;
@@ -79,6 +75,36 @@ body{
 	color:#999;
 	font-weight: normal;
 	font-size: 14px;
+}
+
+.wrapper img{
+	opacity: 1;
+	/*-webkit-animation: showImage 2s;
+    animation: showImage 2s;*/
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes showImage {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+/* Standard syntax */
+@keyframes showImage {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes hidetag {
+    from {opacity: 0.5;}
+    to {opacity: 0;}
+}
+
+/* Standard syntax */
+@keyframes hidetag {
+    from {opacity: 0.5;}
+    to {opacity: 0;}
 }
 
 .wrapper ul{
@@ -98,7 +124,7 @@ body{
 	margin: 0 0 0 0;
 	padding: 0;
 
-	font-family:universElseReg, sans-serif;	
+	font-family:'universElseReg', sans-serif;	
 	font-size: 16px;
 }
 
@@ -119,7 +145,7 @@ body{
 }
 
 #tags h1{
-	font-family: universElseReg, sans-serif;
+	font-family: 'universElseReg', sans-serif;
 	color: white;
 	text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
 	text-align: center;
@@ -138,10 +164,14 @@ body{
 #accueil{
 	width: 100%;
 	height: 100%;
-	padding: 80px 0 0 100px;
+	background-color: rgb(255,70,11);
+}
+
+#accueil>div{
+	padding: 80px 0 0 100px;	
 }
 #accueil h1{
-	font-family:universElseBold, sans-serif;
+	font-family:'universElseBold', sans-serif;
 	font-size: 120px;
 	color:rgb(255,255,255);
 	margin:0 0 0px 0;
@@ -152,7 +182,7 @@ body{
 }
 #accueil p{
 	color:rgb(255,255,255);
-	font-family:universElseReg, sans-serif;
+	font-family:'universElseReg', sans-serif;
 	font-size: 18px;
 	margin:0 0 26px 0;	
 }
@@ -175,7 +205,7 @@ p#decompte{
 	margin:0 auto 0 auto ;
 	padding-bottom:5px; 
 	background-color: black;
-	font-family:universElseReg, sans-serif;	
+	font-family:'universElseReg', sans-serif;	
 	color: white;
 	margin: 0 auto 0 auto ;
 }
@@ -186,10 +216,14 @@ p#decompte{
 	margin-left:20px;
 }
 #credit{
-	position: ;
-	padding: 5px;
+	background-color: black;
+	color: white;
 	width:1000px;
-	/*display:none;*/
+	display:none;
 	margin:0 auto 0 auto ;
-	width:;
+}
+
+#credit p{
+	padding: 5px;
+	margin-left:20px;
 }

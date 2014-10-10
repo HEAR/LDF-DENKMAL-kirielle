@@ -163,6 +163,7 @@ else
 
 	include_once('header.php');
 	echo "<div id='accueil'>";
+	echo "<div>";
 	echo "<a href='<?php echo URL?>'><h1>Kirielle</h1></a>";
 	echo "<div id='liseret'></div>";
 	echo "<p>Cérémonies du 11 novembre. Plusieurs lieux de commémoration.</br>Des dizaines de jeunes photographes témoignent de ces instants.</p>
@@ -193,6 +194,7 @@ else
 	$listeTags = implode(',',$listeTags);
 
 	//echo "</ul>";
+	echo "</div>";
 	echo "</div>";
 	echo "<div id='tags' data-tags='{$listeTags}'><h1>ok</h1></div>";
 	include_once('footer.php');
