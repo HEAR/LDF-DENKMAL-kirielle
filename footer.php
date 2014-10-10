@@ -1,6 +1,8 @@
-	
+
 	</div>
-	<div id="apropos"><a>Crédits</a><a href="<?php echo URL;?>">Accueil</a></div>	
+	<div id="credit"><p>Conception, réalisation : Lucas Descroix, Arman Mohtadji, Léna Robin</br>
+Remerciements : Philippe Delangle, Thomas Deyriès, Loïc Horellou</p></div>
+	<div id="apropos"><a href="<?php echo URL;?>">Accueil</a><a>Crédits</a></div>	
 
 	<!-- fin #page -->
 	

@@ -55,7 +55,7 @@ body{
 
 .tagImg{
 	position:absolute;
-	border: solid pink 1px;
+	border: solid black 1px;
 	opacity: 0.4;
 	cursor: pointer;
 }
@@ -86,7 +86,8 @@ body{
 	bottom: 20px;
 	left: 10px;
 	margin: 0;
-	padding: 5px;
+	padding: 0px 10px 3px 10px;
+	line-height: 1.3em;
 	list-style: none;
 	background: #FFF;
 }
@@ -183,4 +184,12 @@ p#decompte{
 	color:white;
 	font-size:16px;
 	margin-left:20px;
+}
+#credit{
+	position: ;
+	padding: 5px;
+	width:1000px;
+	/*display:none;*/
+	margin:0 auto 0 auto ;
+	width:;
 }
