@@ -66,19 +66,17 @@ if( !empty( $_GET['url'] ) )
 
 					// POUR GENERER LA LISTE DES MOTS CLEFS
 					$keywords = array_unique($keywords);
-
 					echo "<ul id='listetags'>\n";
 					foreach ($keywords as $key => $value) {
-						
 						echo "<li class='$value'><span>";
 						echo json_decode( file_get_contents( LOCAL_PATH."/keywords/{$value}.json" ) )->mot;
 						echo "</span></li>\n";
 
 					}
+
+
 					echo "</ul>\n";
-
 					echo "</div>\n";
-
 					
 					// FIN image
 				}
@@ -165,11 +163,13 @@ else
 
 	include_once('header.php');
 	echo "<div id='accueil'>";
-	//kirielle
-	echo "<p>Cérémonies du 11 novembre. Plusieurs lieux de commémoration. Des dizaines de jeunes photographes témoignent de ces instants.</p>
-	<p>Juxtaposées, toutes ces images sont des points de vue qui se croisent, se répondent et se complètent. Elles créent des 11 novembre.</p>
-	<p>Parcourez les images, dénichez les zones de liens et <a href='#' id='go'>empruntez vos propres pistes</a>.</p>";
-	echo "<p>Actuellement 2 années, 5 cérémonies, 23 photographes, {$nbrImages} images et {$nbrKeyword} mots-clés</p>";
+	echo "<a href='<?php echo URL?>'><h1>Kirielle</h1></a>";
+	echo "<div id='liseret'></div>";
+	echo "<p>Cérémonies du 11 novembre. Plusieurs lieux de commémoration.</br>Des dizaines de jeunes photographes témoignent de ces instants.</p>
+	<p>Juxtaposées, toutes ces images sont des points de vue qui se croisent,</br>se répondent et se complètent. Elles créent des 11 novembre.</p>
+	<p>Parcourez les images, dénichez les zones de liens et <u><a href='#' id='go'>empruntez vos propres pistes</a></u>.</p>";
+	echo "<div id='liseret'></div>";
+	echo "<p id='decompte'>Actuellement:</br> 2 années, 5 cérémonies, 23 photographes, {$nbrImages} images et {$nbrKeyword} mots-clés</p>";
 	//echo "<ul>";
 
 	$listeTags = array();

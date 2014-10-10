@@ -11,4 +11,4 @@
 
 <body>
 	<div id="page">
-		<h1><a href="<?php echo URL?>">Kirielle</a></h1>
+<!-- 		<h1><a href="<?php //echo URL?>">Kirielle</a></h1> -->

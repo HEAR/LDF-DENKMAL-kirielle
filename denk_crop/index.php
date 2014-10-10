@@ -44,7 +44,7 @@ function upload($file, $repository)
 	// https://github.com/nilopc/NilPortugues_Javascript_Multiple_JCrop/blob/master/index.php
 
 	$src = $image->setImage($filename)
-		      ->resize(800,600,'crop')
+		      ->resize(1000,650,'crop')
 		      ->save( $repository, $nom, $image->getFileType(), 95);
 
 	$vignette = $image->setImage($filename)
@@ -151,6 +151,7 @@ if( !empty( $_FILES['image_file']['name'] ) )
 	<h2>Images :</h2>
 	<form action="" enctype="multipart/form-data" method="post">
 		<p><input type="file" value="" name="image_file" /></p>
+		<label>Prénom Nom — Lieu, 1 janvier 1970</label>
 		<p><input type="text" value="" name="credit" placeholder="Nom — Lieu, 1 janvier 1970"/></p>
 		<p><input type="submit" value="Ajouter l'image"/></p>
 	</form>

@@ -1,5 +1,7 @@
-
+	
 	</div>
+	<div id="apropos"><a>Crédits</a><a href="<?php echo URL;?>">Accueil</a></div>	
+
 	<!-- fin #page -->
 	
 	<script src="<?php echo URL;?>/js/jquery-1.11.1.min.js"></script>
