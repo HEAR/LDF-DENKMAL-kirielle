@@ -107,32 +107,44 @@ body{
     to {opacity: 0;}
 }
 
-.wrapper ul{
+.wrapper #divtags{
 	position: absolute;
 	bottom: 20px;
 	left: 10px;
+	background: #FFF;
+}
+
+.wrapper #divtags img{
+	display: inline-block;
+	float: left;
+	margin-left: 10px;
+	margin-top: 4px;
+	vertical-align: bottom;
+}
+
+.wrapper #divtags ul{
+	display: inline-block;
 	margin: 0;
 	padding: 0px 10px 3px 10px;
 	line-height: 1.3em;
 	list-style: none;
-	background: #FFF;
 }
 
-.wrapper ul li{
+.wrapper #divtags ul li{
 	display: inline-block;
 	float: left;
-	margin: 0 0 0 0;
+	margin: 3px 0 0 0;
 	padding: 0;
 
 	font-family:'universElseReg', sans-serif;	
 	font-size: 16px;
 }
 
-.wrapper ul li:before{
+.wrapper #divtags ul li:before{
 	content: ", ";
 }
 
-.wrapper ul li:first-child:before{
+.wrapper #divtags ul li:first-child:before{
 	content: "";	
 }
 

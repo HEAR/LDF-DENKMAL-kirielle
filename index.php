@@ -65,6 +65,11 @@ if( !empty( $_GET['url'] ) )
 					echo "</h3>";
 
 					// POUR GENERER LA LISTE DES MOTS CLEFS
+					// 
+					echo "<div id='divtags'>";
+
+					echo "<img src='".URL."/LogoKirielle.png'/>";
+
 					$keywords = array_unique($keywords);
 					echo "<ul id='listetags'>\n";
 					foreach ($keywords as $key => $value) {
@@ -73,9 +78,10 @@ if( !empty( $_GET['url'] ) )
 						echo "</span></li>\n";
 
 					}
-
-
 					echo "</ul>\n";
+
+					echo "</div>";
+
 					echo "</div>\n";
 					
 					// FIN image
@@ -164,7 +170,7 @@ else
 	include_once('header.php');
 	echo "<div id='accueil'>";
 	echo "<div>";
-	echo "<a href='<?php echo URL?>'><h1>Kirielle</h1></a>";
+	echo "<a href='".URL."/'><h1>Kirielle</h1></a>";
 	echo "<div id='liseret'></div>";
 	echo "<p>Cérémonies du 11 novembre. Plusieurs lieux de commémoration.</br>Des dizaines de jeunes photographes témoignent de ces instants.</p>
 	<p>Juxtaposées, toutes ces images sont des points de vue qui se croisent,</br>se répondent et se complètent. Elles créent des 11 novembre.</p>
