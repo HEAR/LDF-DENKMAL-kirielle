@@ -112,6 +112,8 @@ if($isImage)
 </head>
 <body>
 
+<div id="admin_page">
+
 <?php if($isImage) : ?>
 
 	<p><a href="./">Revenir à l'accueil</a></p>
@@ -180,6 +182,8 @@ if($isImage)
 		<p><a href="./">Revenir à l'accueil</a></p>
 
 	<?php endif;?>
+
+	</div>
 
 	<script src="../js/jquery-1.11.1.min.js"></script>
     <script src="../js/jquery.Jcrop.js"></script>

@@ -110,74 +110,85 @@ if( !empty( $_FILES['image_file']['name'] ) )
 <head>
 	<title>Kirielle Tag Image</title>
 	<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+	<link rel="stylesheet" href="admin.css">
 
 </head>
 <body>
 
-	<h1>Kirielle — administration</h1>
-	<!--<p><?php echo LOCAL_PATH; ?></p>
-	<p><?php echo URL; ?></p>-->
+	<div id="admin_page">
 
-	
+		<div id="menu">
 
-	<h2>Mots clefs :</h2>
-	<form action="" method="post">
+		<h1>Kirielle — administration</h1>
+		<!--<p><?php echo LOCAL_PATH; ?></p>
+		<p><?php echo URL; ?></p>-->
 
-		<input type="text"    name="keyword" placeholder="Mot clef"/>
-		<input type="hidden"  name="add_keyword" value="1"/>
-		<input type="submit"  value="Ajouter"/>
+		
 
-	</form>
-	<ul>
-		<?php
+		<h2>Mots clefs :</h2>
+		<form action="" method="post" class="clearfix">
 
-		// on fait la liste des mots clefs
-		foreach( glob( "{" . LOCAL_PATH . '/keywords/*.json}', GLOB_BRACE ) as $file )
-		{
+			<p><input type="text"    name="keyword" placeholder="Mot clef"/></p>
+			<p><input type="hidden"  name="add_keyword" value="1"/></p>
+			<p><input type="submit"  value="Ajouter"/></p>
 
-			$info = json_decode(file_get_contents($file));
+		</form>
+		<ul id="keywords">
+			<?php
 
-			$keyword      = $info->mot;
-			$identifiant  = $info->identifiant;
-
-			echo "<li>$keyword / $identifiant / (<a href='?suppr=$identifiant' data-word='$keyword' class='suppr'>supprimer</a>)</li>";
-
-		}
-
-		?>
-	</ul>
-
-
-	<h2>Images :</h2>
-	<form action="" enctype="multipart/form-data" method="post">
-		<p><input type="file" value="" name="image_file" /></p>
-		<label>Prénom Nom — Lieu, 1 janvier 1970</label>
-		<p><input type="text" value="" name="credit" placeholder="Nom — Lieu, 1 janvier 1970"/></p>
-		<p><input type="submit" value="Ajouter l'image"/></p>
-	</form>
-	<ul>
-		<?php
-
-	  	// on fait la liste des images
-		foreach( glob( "{" . LOCAL_PATH . '/data/*}', GLOB_BRACE ) as $folder )
-		{
-
-			$vignette = $folder.'/vignette.jpg';
-
-			if(is_file($vignette))
+			// on fait la liste des mots clefs
+			foreach( glob( "{" . LOCAL_PATH . '/keywords/*.json}', GLOB_BRACE ) as $file )
 			{
 
-				$url     = str_replace(LOCAL_PATH, URL, $vignette);
-				$folder  = explode('/', $folder);
-				$editurl = URL.'/denk_crop/edit.php?image='.$folder[count($folder)-1];
+				$info = json_decode(file_get_contents($file));
 
-				echo "<li class='vignette'><a href='$editurl'><img src='$url'/></a></li>";
+				$keyword      = $info->mot;
+				$identifiant  = $info->identifiant;
+
+				echo "<li>$keyword / $identifiant / (<a href='?suppr=$identifiant' data-word='$keyword' class='suppr'>supprimer</a>)</li>";
+
 			}
-		}
 
-		?>
-	</ul>
+			?>
+		</ul>
 
+
+
+
+		<h2>Images :</h2>
+		<form action="" enctype="multipart/form-data" method="post" class="clearfix">
+			<p><input type="file" value="" name="image_file" /></p>
+			<label>Prénom Nom — Lieu, 1 janvier 1970</label>
+			<p><input type="text" value="" name="credit" placeholder="Nom — Lieu, 1 janvier 1970"/></p>
+			<p><input type="submit" value="Ajouter l'image"/></p>
+		</form>
+
+	</div>
+		<ul id="gallery">
+			<?php
+
+		  	// on fait la liste des images
+			foreach( glob( "{" . LOCAL_PATH . '/data/*}', GLOB_BRACE ) as $folder )
+			{
+
+				$vignette = $folder.'/vignette.jpg';
+
+				if(is_file($vignette))
+				{
+
+					$url     = str_replace(LOCAL_PATH, URL, $vignette);
+					$folder  = explode('/', $folder);
+					$editurl = URL.'/denk_crop/edit.php?image='.$folder[count($folder)-1];
+
+					echo "<li class='vignette'><a href='$editurl'><img src='$url'/></a></li>";
+				}
+			}
+
+			?>
+		</ul>
+
+
+	</div>
 
 	<script src="../js/jquery-1.11.1.min.js"></script>
 	<script>
